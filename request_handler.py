@@ -1,3 +1,4 @@
+from categories.request import get_all_categories
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from users.request import get_user_by_email
@@ -60,9 +61,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         parsed = self.parse_url(self.path)
 
         if len(parsed) <= 2:
-            # no query params
-            pass
-            # (resource, id) = parsed
+            ( resource, id ) = parsed
+            if resource == "categories":
+                response = f"{get_all_categories()}"
+
         else:
             # we got query params!
             (resource, key, value) = parsed

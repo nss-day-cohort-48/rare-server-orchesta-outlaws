@@ -62,7 +62,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if len(parsed) <= 2:
             ( resource, id ) = parsed
-            if resource == "categories":
+            if resource.lower() == "categories":
                 response = f"{get_all_categories()}"
 
         else:

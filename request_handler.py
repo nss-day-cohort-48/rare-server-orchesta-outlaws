@@ -1,11 +1,36 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+from users.request import get_user_by_email
 
 
 class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
-        # TODO
-        pass
+        path_params = path.split("/")
+        resource = path_params[1]
+
+        # Check if there is a query string parameter
+        if "?" in resource:
+
+            param = resource.split("?")[1]
+            resource = resource.split("?")[0]
+            pair = param.split("=")
+            key = pair[0]
+            value = pair[1]
+
+            return (resource, key, value)
+
+        # No query string parameter
+        else:
+            id = None
+
+            try:
+                id = int(path_params[2])
+            except IndexError:
+                pass
+            except ValueError:
+                pass
+
+            return (resource, id)
 
     def _set_headers(self, status):
         """_set_headers is an internal method that sends the proper headers for a given status code
@@ -30,8 +55,21 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        # TODO
-        pass
+        self._set_headers(200)
+        response = {}
+        parsed = self.parse_url(self.path)
+
+        if len(parsed) <= 2:
+            # no query params
+            pass
+            # (resource, id) = parsed
+        else:
+            # we got query params!
+            (resource, key, value) = parsed
+            if resource.lower() == "users" and key.lower() == "email":
+                response = get_user_by_email(value)
+
+        self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
         # TODO
@@ -49,7 +87,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 def main():
     host = ''
     port = 8088
-    HTTPServer((host,port), HandleRequests).serve_forever()
+    HTTPServer((host, port), HandleRequests).serve_forever()
+
 
 if __name__ == "__main__":
     main()

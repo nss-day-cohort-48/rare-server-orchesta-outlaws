@@ -9,15 +9,14 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # Check if there is a query string parameter
         if "?" in resource:
-            # GIVEN: /customers?email=jenna@solis.com
 
-            param = resource.split("?")[1]  # email=jenna@solis.com
-            resource = resource.split("?")[0]  # 'customers'
-            pair = param.split("=")  # [ 'email', 'jenna@solis.com' ]
-            key = pair[0]  # 'email'
-            value = pair[1]  # 'jenna@solis.com'
+            param = resource.split("?")[1]
+            resource = resource.split("?")[0]
+            pair = param.split("=")
+            key = pair[0]
+            value = pair[1]
 
-            return ( resource, key, value )
+            return (resource, key, value)
 
         # No query string parameter
         else:
@@ -26,9 +25,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             try:
                 id = int(path_params[2])
             except IndexError:
-                pass  # No route parameter exists: /animals
+                pass
             except ValueError:
-                pass  # Request had trailing slash: /animals/
+                pass
 
             return (resource, id)
 
@@ -71,9 +70,6 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         self.wfile.write(json.dumps(response).encode())
 
-
-
-
     def do_POST(self):
         # TODO
         pass
@@ -90,7 +86,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 def main():
     host = ''
     port = 8088
-    HTTPServer((host,port), HandleRequests).serve_forever()
+    HTTPServer((host, port), HandleRequests).serve_forever()
+
 
 if __name__ == "__main__":
     main()

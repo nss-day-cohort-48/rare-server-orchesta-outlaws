@@ -35,4 +35,4 @@ def get_user_by_email(email):
             dataset['profile_image_url'],
             dataset['created_on'],
             dataset['active']
-        )
+        ).__dict__

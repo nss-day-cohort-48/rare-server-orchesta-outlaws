@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+from users.request import get_user_by_email
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -65,7 +66,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         else:
             # we got query params!
             (resource, key, value) = parsed
-            if resource.lower() == "users" AND key.lower() == "email":
+            if resource.lower() == "users" and key.lower() == "email":
                 response = get_user_by_email(value)
 
         self.wfile.write(json.dumps(response).encode())

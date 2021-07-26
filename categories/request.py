@@ -20,3 +20,18 @@ def get_all_categories():
             category = Category(row['id'], row['label'])
             categories.append(category.__dict__)
     return json.dumps(categories)
+
+def create_category(new_cat):
+    """creates a new category, id associated with foreign key in Posts table
+    """
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        INSERT INTO Categories
+            (label)
+        VALUES
+            (?)
+        """, (new_cat['label'], ))
+        id = db_cursor.lastrowid
+        new_cat['id'] = id
+    return json.dumps(new_cat)

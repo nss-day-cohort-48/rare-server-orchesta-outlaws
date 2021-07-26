@@ -1,4 +1,4 @@
-from categories.request import get_all_categories
+from categories.request import create_category, get_all_categories
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from users.request import get_user_by_email
@@ -74,8 +74,23 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
-        # TODO
-        pass
+        """Handles POST requests to the server
+        """
+        self._set_headers(201)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+
+        # Convert JSON string to a Python dictionary
+        post_body = json.loads(post_body)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        new_category = None
+
+        if resource == "categories":
+            new_category = create_category(post_body)
+            self.wfile.write(f"{new_category}".encode())
 
     def do_PUT(self):
         # TODO

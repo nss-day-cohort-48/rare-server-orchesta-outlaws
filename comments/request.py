@@ -1,9 +1,10 @@
 import sqlite3
 import json
 from models import Comment
+from datetime import datetime
 
 def create_comment(new_comment):
-    '''Reader/Author can add a comment to an author's post'''
+    '''Reader/Author can add a comment to an author's post. Resulting comment will display the article title and content'''
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
 

@@ -81,11 +81,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         post_body = json.loads(post_body)
         (resource, _) = self.parse_url(self.path)
 
-        new_comment = self.parse_url(self.path)
+        new_comment = None
 
         if resource == "comments":
             new_comment = create_comment(post_body)
-            self.wfile.write(json.dumps(new_comment).encode())
+            self.wfile.write(json.dumps(new_comment.encode())
 
     def do_PUT(self):
         # TODO

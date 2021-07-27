@@ -1,7 +1,7 @@
 from categories.request import create_category, get_all_categories
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from users.request import create_new_user, get_user_by_email
+from users.request import register_new_user, get_user_by_email
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -77,20 +77,24 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         """Handles POST requests to the server
         """
-        self._set_headers(201) # STATUS CREATED
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
-        # Co
         post_body = json.loads(post_body)
 
         parsed = self.parse_url(self.path)
         resource = parsed[0].lower()
-        new_thing = None
         new_category = None
-        if resource == "users":
-            new_thing = create_new_user(post_body)
-            self.wfile.write(json.dumps(new_thing).encode())
+        if resource == "register":
+            # if the user specified by the email in the post body does exist:
+            if (get_user_by_email(post_body.email) is None):
+                self._set_headers(201) # STATUS CREATED
+                new_user = register_new_user(post_body)
+                self.wfile.write(json.dumps(new_user).encode())
+            else:
+                self._set_headers(403) # STATUS ALREADY EXISTS
+                self.wfile.write(json.dumps("").encode())
         elif resource == "categories":
+            self._set_headers(201) # STATUS CREATED
             new_category = create_category(post_body)
             self.wfile.write(json.dumps(new_category).encode())
 

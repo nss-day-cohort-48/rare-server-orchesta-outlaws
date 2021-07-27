@@ -1,7 +1,5 @@
 [FORMAT]
-good-names=i,
-    j,
-    ex,
+good-names=ex,
     pk,
     id,
     do_PUT,

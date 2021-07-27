@@ -10,4 +10,3 @@ good-names=ex,
 
 [MESSAGES CONTROL]
 disable=broad-except,redefined-builtin,missing-module-docstring,no-member
-

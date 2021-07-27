@@ -18,7 +18,7 @@ CREATE TABLE "Users" (
   "username" varchar,
   "password" varchar,
   "profile_image_url" varchar,
-  "created_on" date,
+  "created_on" varchar,
   "active" bit
 );
 CREATE TABLE "DemotionQueue" (
@@ -107,4 +107,3 @@ INSERT INTO Users VALUES (
     2021/07/26,
     1
   );
-

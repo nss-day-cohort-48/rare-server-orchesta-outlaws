@@ -63,7 +63,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if len(parsed) <= 2:
             ( resource, id ) = parsed
             if resource.lower() == "categories":
-                response = f"{get_all_categories()}"
+                response = get_all_categories()
 
         else:
             # we got query params!
@@ -71,7 +71,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource.lower() == "users" and key.lower() == "email":
                 response = get_user_by_email(value)
 
-        self.wfile.write(response.encode())
+        self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
         """Handles POST requests to the server

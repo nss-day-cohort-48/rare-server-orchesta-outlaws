@@ -19,7 +19,7 @@ def get_all_categories():
         for row in dataset:
             category = Category(row["id"], row["label"])
             categories.append(category.__dict__)
-    return json.dumps(categories)
+    return categories
 
 def create_category(new_cat):
     """creates a new category, id associated with foreign key in Posts table

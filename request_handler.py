@@ -86,13 +86,13 @@ class HandleRequests(BaseHTTPRequestHandler):
         new_category = None
         if resource == "register":
             # if the user specified by the email in the post body does exist:
-            if (get_user_by_email(post_body.email) is None):
+            if (get_user_by_email(post_body['email']) is None):
                 self._set_headers(201) # STATUS CREATED
                 new_user = register_new_user(post_body)
                 self.wfile.write(json.dumps(new_user).encode())
             else:
-                self._set_headers(403) # STATUS ALREADY EXISTS
-                self.wfile.write(json.dumps("").encode())
+                self._set_headers(409) # STATUS CONFLICT (used here to indicate it already exists)
+                self.wfile.write(json.dumps("User already exists.").encode())
         elif resource == "categories":
             self._set_headers(201) # STATUS CREATED
             new_category = create_category(post_body)

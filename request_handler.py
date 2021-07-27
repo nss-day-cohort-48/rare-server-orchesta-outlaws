@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from users.request import get_user_by_email
+from users.request import create_new_user, get_user_by_email
 from posts import get_posts_by_user
 
 

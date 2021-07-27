@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from users.request import get_user_by_email
+from users.request import create_new_user, get_user_by_email
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -69,11 +69,20 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource.lower() == "users" and key.lower() == "email":
                 response = get_user_by_email(value)
 
-        self.wfile.write(json.dumps(response).encode())
+        self.wfile.write(response.encode())
 
     def do_POST(self):
-        # TODO
-        pass
+        self._set_headers(201) # STATUS CREATED
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        parsed = self.parse_url(self.path)
+        resource = parsed[0]
+        if resource.lower() == "users":
+            new_thing = create_new_user(post_body)
+        
+        self.wfile.write(new_thing.encode())
 
     def do_PUT(self):
         # TODO

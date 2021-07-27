@@ -1,6 +1,8 @@
 import sqlite3
+import json
 from database import DB_FILE
 from models import User
+
 
 def get_user_by_email(email):
     with sqlite3.connect(DB_FILE) as conn:
@@ -24,7 +26,7 @@ def get_user_by_email(email):
 
         dataset = db_cursor.fetchone()
 
-        return User(
+        user = User(
             dataset['id'],
             dataset['first_name'],
             dataset['last_name'],
@@ -36,3 +38,39 @@ def get_user_by_email(email):
             dataset['created_on'],
             dataset['active']
         ).__dict__
+        return json.dumps(user)
+
+
+def create_new_user(user):
+    with sqlite3.connect(DB_FILE) as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+            INSERT INTO Users
+                (
+                    first_name, 
+                    last_name, 
+                    email, 
+                    bio, 
+                    username, 
+                    password, 
+                    profile_image_url, 
+                    created_on, 
+                    active
+                )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            user['first_name'],
+            user['last_name'],
+            user['email'],
+            user['bio'],
+            user['username'],
+            user['password'],
+            user['profile_image_url'],
+            user['created_on'],
+            user['active']
+            ))
+        # Now that the INSERT is done, grab the autoincremented id
+        user['id'] = db_cursor.lastrowid
+        return json.dumps(user)
+

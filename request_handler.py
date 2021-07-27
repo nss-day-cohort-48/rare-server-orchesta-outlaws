@@ -1,8 +1,9 @@
-from categories.request import create_category, get_all_categories
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from users.request import create_new_user, get_user_by_email
-from posts import get_posts_by_user
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from post_reactions.request import get_all_post_reactions
+from categories.request import create_category, get_all_categories
+from users.request import create_new_user, get_single_user, get_user_by_email
+from posts.request import get_posts_by_user
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -65,6 +66,11 @@ class HandleRequests(BaseHTTPRequestHandler):
             ( resource, id ) = parsed
             if resource.lower() == "categories":
                 response = get_all_categories()
+            elif resource == "postreactions":
+                response = get_all_post_reactions() 
+            elif resource == "users":
+                if id is not None:
+                    response = get_single_user(id)
 
         else:
             # we got query params!

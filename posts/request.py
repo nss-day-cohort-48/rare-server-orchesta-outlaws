@@ -1,7 +1,6 @@
 import sqlite3
-import json
 from database import DB_FILE
-from models import Post
+from models import Post, Category
 
 def get_posts_by_user(id):
     """Returns a list of all the posts by the user's id
@@ -18,8 +17,11 @@ def get_posts_by_user(id):
             p.publication_date,
             p.image_url,
             p.content,
-            p.approved
-        FROM post p
+            p.approved,
+            c.label comment_label
+        FROM posts p
+        JOIN categories c
+            ON p.category_id = c.id
         WHERE p.user_id = ?
         """, (id, ))
         posts = []
@@ -28,6 +30,8 @@ def get_posts_by_user(id):
             post = Post(row['id'], row['user_id'], row['category_id'],
                             row['title'], row['publication_date'], row['image_url'],
                             row['content'], row['approved'])
+            category = Category(row['id'], row['comment_label'])
+            post.category = category.__dict__
             posts.append(post.__dict__)
 
-    return json.dumps(posts)
+    return posts

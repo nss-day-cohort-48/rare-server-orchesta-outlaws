@@ -89,14 +89,12 @@ INSERT INTO Categories ("id", "label")
 VALUES (1, "News");
 INSERT INTO Tags ('label')
 VALUES ('JavaScript');
+INSERT INTO PostReactions ("user_id", "reaction_id", "post_id")
+VALUES (1, 1, 1);
 INSERT INTO Reactions ('label', 'image_url')
 VALUES ('happy', 'https://pngtree.com/so/happy');
 INSERT INTO Posts ('user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved')
 VALUES (1, 1, 'cassowary', '2021-07-27', 'https://cdn.britannica.com/43/138843-050-DD4F15FF/cassowary.jpg', 'cool bird', 1);
-
-
-SELECT * FROM Categories;
-
 INSERT INTO Users VALUES (
     null,
     'Steve',

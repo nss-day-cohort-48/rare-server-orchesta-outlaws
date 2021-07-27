@@ -91,5 +91,19 @@ INSERT INTO Tags ('label')
 VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url')
 VALUES ('happy', 'https://pngtree.com/so/happy');
+INSERT INTO PostReactions ("user_id", "reaction_id", "post_id")
+VALUES (1, 1, 1);
 
+SELECT * FROM Reactions;
+SELECT * FROM PostReactions;
+
+        SELECT
+            a.id,
+            a.user_id,
+            a.reaction_id,
+            a.post_id,
+
+        FROM PostReactions a
+
+        WHERE a.post_id = 1;
 

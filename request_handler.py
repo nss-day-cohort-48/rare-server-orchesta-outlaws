@@ -1,3 +1,4 @@
+from post_reactions.request import get_post_reactions_by_post_id
 from categories.request import create_category, get_all_categories
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
@@ -72,6 +73,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             (resource, key, value) = parsed
             if resource.lower() == "users" and key.lower() == "email":
                 response = get_user_by_email(value)
+            elif resource.lower() == "post_reactions" and key.lower() == "post_id":
+                response = get_post_reactions_by_post_id(value)
 
         self.wfile.write(json.dumps(response).encode())
 
@@ -82,10 +85,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
-
-        if resource == "comments":
-            new_comment = create_comment(post_body)
-            self.wfile.write(json.dumps(new_comment).encode())
 
         parsed = self.parse_url(self.path)
         resource = parsed[0].lower()
@@ -100,10 +99,12 @@ class HandleRequests(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(new_category).encode())
         elif resource == "comments":
             new_comment = create_comment(post_body)
-            self.wfile.write(json.dumps(new_comment).encode()
+            self.wfile.write(json.dumps(new_comment).encode())
 
 
     def do_PUT(self):
+        """PUT fetch call handler
+        """
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)

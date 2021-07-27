@@ -85,12 +85,16 @@ CREATE TABLE "Categories" (
   "label" varchar
 );
 --
-INSERT INTO Categories ('label')
-VALUES ('News');
+INSERT INTO Categories ("id", "label")
+VALUES (1, "News");
 INSERT INTO Tags ('label')
 VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url')
 VALUES ('happy', 'https://pngtree.com/so/happy');
+
+
+SELECT * FROM Categories;
+
 INSERT INTO Users VALUES (
     null,
     'Steve',
@@ -103,3 +107,4 @@ INSERT INTO Users VALUES (
     2021/07/26,
     1
   );
+

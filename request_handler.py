@@ -1,3 +1,4 @@
+from categories.request import create_category, get_all_categories
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from users.request import create_new_user, get_user_by_email
@@ -60,9 +61,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         parsed = self.parse_url(self.path)
 
         if len(parsed) <= 2:
-            # no query params
-            pass
-            # (resource, id) = parsed
+            ( resource, id ) = parsed
+            if resource.lower() == "categories":
+                response = get_all_categories()
+
         else:
             # we got query params!
             (resource, key, value) = parsed
@@ -72,6 +74,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
+
+        """Handles POST requests to the server
+        """
         self._set_headers(201) # STATUS CREATED
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
@@ -79,16 +84,33 @@ class HandleRequests(BaseHTTPRequestHandler):
         post_body = json.loads(post_body)
 
         parsed = self.parse_url(self.path)
-        resource = parsed[0]
+        resource = parsed[0].lower()
         new_thing = None
-        if resource.lower() == "users":
+        new_category = None
+        if resource == "users":
             new_thing = create_new_user(post_body)
-        
-        self.wfile.write(json.dumps(new_thing).encode())
+            self.wfile.write(json.dumps(new_thing).encode())
+        elif resource == "categories":
+            new_category = create_category(post_body)
+            self.wfile.write(json.dumps(new_category).encode())
 
     def do_PUT(self):
-        # TODO
-        pass
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+        (resource, id) = self.parse_url(self.path)
+
+        success = False
+
+        if resource == "categories":
+            success = True
+        
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+        
+        self.wfile.write("".encode())
 
     def do_DELETE(self):
         # TODO

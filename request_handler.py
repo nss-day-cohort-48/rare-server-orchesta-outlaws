@@ -1,4 +1,4 @@
-from categories.request import create_category, get_all_categories
+from categories.request import create_category, get_all_categories, update_category
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from users.request import create_new_user, get_user_by_email
@@ -103,7 +103,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
 
         if resource == "categories":
-            success = True
+            success = update_category(id, post_body)
         
         if success:
             self._set_headers(204)

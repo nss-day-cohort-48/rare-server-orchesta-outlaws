@@ -26,7 +26,7 @@ def get_user_by_email(email):
 
         dataset = db_cursor.fetchone()
 
-        user = User(
+        return User(
             dataset['id'],
             dataset['first_name'],
             dataset['last_name'],
@@ -38,7 +38,6 @@ def get_user_by_email(email):
             dataset['created_on'],
             dataset['active']
         ).__dict__
-        return json.dumps(user)
 
 
 def create_new_user(user):
@@ -72,5 +71,4 @@ def create_new_user(user):
             ))
         # Now that the INSERT is done, grab the autoincremented id
         user['id'] = db_cursor.lastrowid
-        return json.dumps(user)
-
+        return user

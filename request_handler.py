@@ -55,7 +55,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        self._set_headers(200)
+        self._set_headers(200) # STATUS OKAY
         response = {}
         parsed = self.parse_url(self.path)
 
@@ -69,12 +69,13 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource.lower() == "users" and key.lower() == "email":
                 response = get_user_by_email(value)
 
-        self.wfile.write(response.encode())
+        self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
         self._set_headers(201) # STATUS CREATED
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
+        # Co
         post_body = json.loads(post_body)
 
         parsed = self.parse_url(self.path)
@@ -82,7 +83,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource.lower() == "users":
             new_thing = create_new_user(post_body)
         
-        self.wfile.write(new_thing.encode())
+        self.wfile.write(json.dumps(new_thing).encode())
 
     def do_PUT(self):
         # TODO

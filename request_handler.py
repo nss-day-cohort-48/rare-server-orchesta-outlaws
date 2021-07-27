@@ -9,7 +9,7 @@ from comments import create_comment
 
 
 class HandleRequests(BaseHTTPRequestHandler):
-    def parse_url(self, path):
+    def parse_url(self, path): # pylint: disable=missing-docstring
         path_params = path.split("/")
         resource = path_params[1]
 
@@ -59,7 +59,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                          'X-Requested-With, Content-Type, Accept')
         self.end_headers()
 
-    def do_GET(self):
+    def do_GET(self):  # pylint: disable=missing-docstring
         self._set_headers(200)  # STATUS OKAY
         response = {}
         parsed = self.parse_url(self.path)
@@ -84,9 +84,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         self.wfile.write(json.dumps(response).encode())
 
-    def do_POST(self):
-        """Handles POST requests to the server
-        """
+    def do_POST(self):  # pylint: disable=missing-docstring
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
@@ -109,10 +107,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             self._set_headers(200)
             user_id = login_user(post_body['email'], post_body['password'])
             if user_id is None:
-                self.wfile.write(json.dumps("Email and password do not match.").encode())
+                self.wfile.write(json.dumps(
+                    "Email and password do not match.").encode())
             else:
                 self.wfile.write(json.dumps({"id": user_id}).encode())
-            
 
         if resource == "categories":
             self._set_headers(201)  # STATUS CREATED
@@ -124,7 +122,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
 
-    def do_PUT(self):
+    def do_PUT(self):  # pylint: disable=missing-docstring
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
@@ -142,12 +140,12 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         self.wfile.write("".encode())
 
-    def do_DELETE(self):
+    def do_DELETE(self): # pylint: disable=missing-docstring
         # TODO
         pass
 
 
-def main():
+def main(): # pylint: disable=missing-docstring
     host = ''
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()

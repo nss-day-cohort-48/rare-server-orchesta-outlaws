@@ -80,6 +80,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         parsed = self.parse_url(self.path)
         resource = parsed[0]
+        new_thing = None
         if resource.lower() == "users":
             new_thing = create_new_user(post_body)
         

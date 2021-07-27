@@ -1,10 +1,10 @@
 import sqlite3
+from datetime import datetime
 from database import DB_FILE
 from models import User
 
 
 def get_single_user(id):
-
     """get a single user by the user_id
     """
     with sqlite3.connect(DB_FILE) as conn:
@@ -64,18 +64,21 @@ def get_user_by_email(email):
 
         dataset = db_cursor.fetchone()
 
-        return User(
-            dataset['id'],
-            dataset['first_name'],
-            dataset['last_name'],
-            dataset['email'],
-            dataset['bio'],
-            dataset['username'],
-            dataset['password'],
-            dataset['profile_image_url'],
-            dataset['created_on'],
-            dataset['active']
-        ).__dict__
+        if dataset is None:
+            return None
+        else:
+            return User(
+                dataset['id'],
+                dataset['first_name'],
+                dataset['last_name'],
+                dataset['email'],
+                dataset['bio'],
+                dataset['username'],
+                dataset['password'],
+                dataset['profile_image_url'],
+                dataset['created_on'],
+                dataset['active']
+            ).__dict__
 
 
 def create_new_user(user):
@@ -106,7 +109,39 @@ def create_new_user(user):
             user['profile_image_url'],
             user['created_on'],
             user['active']
-            ))
+        ))
+        # Now that the INSERT is done, grab the autoincremented id
+        user['id'] = db_cursor.lastrowid
+        return user
+
+
+def register_new_user(user):
+    """Creates a new user in the database without a profile image URL or bio.
+        """
+    with sqlite3.connect(DB_FILE) as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+            INSERT INTO Users
+                (
+                    first_name, 
+                    last_name, 
+                    email, 
+                    username, 
+                    password, 
+                    created_on, 
+                    active
+                )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            user['first_name'],
+            user['last_name'],
+            user['email'],
+            user['username'],
+            user['password'],
+            datetime.now().strftime("%Y-%m-%d"),
+            1  # sets the "active" bit to 1 (True)
+        ))
         # Now that the INSERT is done, grab the autoincremented id
         user['id'] = db_cursor.lastrowid
         return user

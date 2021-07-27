@@ -97,13 +97,15 @@ VALUES (1, 1, 1);
 SELECT * FROM Reactions;
 SELECT * FROM PostReactions;
 
-        SELECT
-            a.id,
-            a.user_id,
-            a.reaction_id,
-            a.post_id,
-
-        FROM PostReactions a
-
-        WHERE a.post_id = 1;
+SELECT
+  a.id,
+  a.user_id,
+  a.reaction_id,
+  a.post_id,
+  b.label reaction_label,
+  b.image_url image_url
+FROM PostReactions a
+JOIN Reactions b
+  ON b.id = a.reaction_id
+WHERE a.post_id = 1;
 

@@ -1,10 +1,10 @@
-from post_reactions.request import get_post_reactions_by_post_id
-from categories.request import create_category, get_all_categories
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from users.request import get_user_by_email
 from comments import create_comment
 from users.request import create_new_user, get_user_by_email
+from post_reactions.request import get_post_reactions_by_post_id
+from categories.request import create_category, get_all_categories
 
 
 class HandleRequests(BaseHTTPRequestHandler):

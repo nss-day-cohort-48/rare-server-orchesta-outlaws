@@ -91,3 +91,15 @@ INSERT INTO Tags ('label')
 VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url')
 VALUES ('happy', 'https://pngtree.com/so/happy');
+INSERT INTO Users VALUES (
+    null,
+    'Steve',
+    'Brownlee',
+    'steve@brownlee.com',
+    'I love to talk about crafting code!',
+    'steve',
+    'brownlee',
+    'https://github.com/stevebrownlee.png',
+    2021/07/26,
+    1
+  );

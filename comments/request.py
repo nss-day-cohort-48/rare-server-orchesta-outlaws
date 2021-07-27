@@ -1,12 +1,13 @@
 import sqlite3
 import json
+from models import Comment
 
 def create_comment(new_comment):
     '''Reader/Author can add a comment to an author's post'''
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
 
-        db.cursor.execute("""
+        db_cursor.execute("""
         INSERT INTO Comments
             ( post_id, author_id, content )
         VALUES
@@ -18,8 +19,29 @@ def create_comment(new_comment):
 
     return json.dumps(new_comment)
 
-def view_post_comments(postID):
+def view_comments_by_post(postID):
     '''Reader can see a list of all the comments on a post'''
+    with sqlite3.connect("./rare.db") as conn:
+      db_cursor = conn.cursor()
+
+      db_cursor.execute("""
+      SELECT
+        c.id
+        c.post_id
+        c.author_id
+        c.content
+      FROM Comments c
+      WHERE c.post_id = ?
+      """, ( postID, ))
+
+      comments = []
+      dataset = db_cursor.fetchall()
+
+      for row in dataset:
+            comment = Comment(row['id'], row['post_id'], row['author_id'],row['content'])
+            comments.append(comment.__dict__)
+
+    return json.dumps(comments)
 
 def delete_comment(comment_id):
     '''Reader can delete a comment they have made'''

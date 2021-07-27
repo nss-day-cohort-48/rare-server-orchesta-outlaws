@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from users.request import get_user_by_email
+from posts import get_posts_by_user
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -68,6 +69,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             (resource, key, value) = parsed
             if resource.lower() == "users" and key.lower() == "email":
                 response = get_user_by_email(value)
+            elif resource.lower() == "posts" and key.lower() == "user_id":
+                response = get_posts_by_user(value)
 
         self.wfile.write(json.dumps(response).encode())
 

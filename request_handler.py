@@ -1,7 +1,7 @@
-from categories.request import create_category, get_all_categories
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import json
-from users.request import register_new_user, get_user_by_email
+from categories import create_category, get_all_categories
+from comments import create_comment
+from users import register_new_user, get_user_by_email
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -74,7 +74,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
-
         """Handles POST requests to the server
         """
         content_len = int(self.headers.get('content-length', 0))
@@ -83,20 +82,26 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         parsed = self.parse_url(self.path)
         resource = parsed[0].lower()
-        new_category = None
+
         if resource == "register":
             # if the user specified by the email in the post body does exist:
-            if (get_user_by_email(post_body['email']) is None):
+            if get_user_by_email(post_body['email']) is None:
                 self._set_headers(201) # STATUS CREATED
                 new_user = register_new_user(post_body)
                 self.wfile.write(json.dumps(new_user).encode())
             else:
                 self._set_headers(409) # STATUS CONFLICT (used here to indicate it already exists)
                 self.wfile.write(json.dumps("User already exists.").encode())
-        elif resource == "categories":
+
+        if resource == "categories":
             self._set_headers(201) # STATUS CREATED
             new_category = create_category(post_body)
             self.wfile.write(json.dumps(new_category).encode())
+        elif resource == "comments":
+            self._set_headers(201) # STATUS CREATED
+            new_comment = create_comment(post_body)
+            self.wfile.write(json.dumps(new_comment).encode())
+
 
     def do_PUT(self):
         content_len = int(self.headers.get('content-length', 0))

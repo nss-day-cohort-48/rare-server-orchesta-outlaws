@@ -93,3 +93,15 @@ INSERT INTO Reactions ('label', 'image_url')
 VALUES ('happy', 'https://pngtree.com/so/happy');
 INSERT INTO Posts ('user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved')
 VALUES (1, 1, 'cassowary', '2021-07-27', 'https://cdn.britannica.com/43/138843-050-DD4F15FF/cassowary.jpg', 'cool bird', 1);
+INSERT INTO Users VALUES (
+    null,
+    'Steve',
+    'Brownlee',
+    'steve@brownlee.com',
+    'I love to talk about crafting code!',
+    'steve',
+    'brownlee',
+    'https://github.com/stevebrownlee.png',
+    2021/07/26,
+    1
+  );

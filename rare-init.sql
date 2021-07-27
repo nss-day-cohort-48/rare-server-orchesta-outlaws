@@ -85,20 +85,11 @@ CREATE TABLE "Categories" (
   "label" varchar
 );
 --
-INSERT INTO Categories ('label')
-VALUES ('News');
+INSERT INTO Categories ("id", "label")
+VALUES (1, "News");
 INSERT INTO Tags ('label')
 VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url')
 VALUES ('happy', 'https://pngtree.com/so/happy');
 
-INSERT INTO Comments
-VALUES (1, 2, 3, "Testing out the create comment function")
 
-INSERT INTO Users
-VALUES(2, 'John', 'Smith', 'john@smith.com', 'Journalist','jsmith', 'password', 'profile pic', '20180115', 1)
-
-INSERT INTO Posts
-VALUES(1, 2, 2, 'Billionaires in Space', '20210726', 'www.times.com', 'test', 1)
-
-SELECT * FROM Comments

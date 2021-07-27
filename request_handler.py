@@ -1,7 +1,9 @@
+from categories.request import create_category, get_all_categories
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from users.request import get_user_by_email
 from comments import create_comment
+from users.request import create_new_user, get_user_by_email
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -56,14 +58,15 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        self._set_headers(200)
+        self._set_headers(200) # STATUS OKAY
         response = {}
         parsed = self.parse_url(self.path)
 
         if len(parsed) <= 2:
-            # no query params
-            pass
-            # (resource, id) = parsed
+            ( resource, id ) = parsed
+            if resource.lower() == "categories":
+                response = get_all_categories()
+
         else:
             # we got query params!
             (resource, key, value) = parsed
@@ -79,17 +82,44 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
-        (resource, _) = self.parse_url(self.path)
-
-        new_comment = None
 
         if resource == "comments":
             new_comment = create_comment(post_body)
-            self.wfile.write(json.dumps(new_comment.encode())
+            self.wfile.write(json.dumps(new_comment).encode())
+
+        parsed = self.parse_url(self.path)
+        resource = parsed[0].lower()
+        new_thing = None
+        new_category = None
+        new_comment = None
+        if resource == "users":
+            new_thing = create_new_user(post_body)
+            self.wfile.write(json.dumps(new_thing).encode())
+        elif resource == "categories":
+            new_category = create_category(post_body)
+            self.wfile.write(json.dumps(new_category).encode())
+        elif resource == "comments":
+            new_comment = create_comment(post_body)
+            self.wfile.write(json.dumps(new_comment).encode()
+
 
     def do_PUT(self):
-        # TODO
-        pass
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+        (resource, id) = self.parse_url(self.path)
+
+        success = False
+
+        if resource == "categories":
+            success = True
+        
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+        
+        self.wfile.write("".encode())
 
     def do_DELETE(self):
         # TODO

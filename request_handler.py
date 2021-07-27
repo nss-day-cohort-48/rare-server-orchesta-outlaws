@@ -1,7 +1,10 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from categories import create_category, get_all_categories
+import json
+from users import register_new_user, get_user_by_email, get_single_user
+from post_reactions import get_all_post_reactions
+from categories import create_category, get_all_categories, update_category
+from posts import get_posts_by_user
 from comments import create_comment
-from users import register_new_user, get_user_by_email
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -56,20 +59,27 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        self._set_headers(200) # STATUS OKAY
+        self._set_headers(200)  # STATUS OKAY
         response = {}
         parsed = self.parse_url(self.path)
 
         if len(parsed) <= 2:
-            ( resource, id ) = parsed
+            (resource, id) = parsed
             if resource.lower() == "categories":
                 response = get_all_categories()
+            elif resource == "postreactions":
+                response = get_all_post_reactions()
+            elif resource == "users":
+                if id is not None:
+                    response = get_single_user(id)
 
         else:
             # we got query params!
             (resource, key, value) = parsed
             if resource.lower() == "users" and key.lower() == "email":
                 response = get_user_by_email(value)
+            elif resource.lower() == "posts" and key.lower() == "user_id":
+                response = get_posts_by_user(value)
 
         self.wfile.write(json.dumps(response).encode())
 
@@ -86,22 +96,22 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "register":
             # if the user specified by the email in the post body does exist:
             if get_user_by_email(post_body['email']) is None:
-                self._set_headers(201) # STATUS CREATED
+                self._set_headers(201)  # STATUS CREATED
                 new_user = register_new_user(post_body)
                 self.wfile.write(json.dumps(new_user).encode())
             else:
-                self._set_headers(409) # STATUS CONFLICT (used here to indicate it already exists)
+                # STATUS CONFLICT (used here to indicate it already exists)
+                self._set_headers(409)
                 self.wfile.write(json.dumps("User already exists.").encode())
 
         if resource == "categories":
-            self._set_headers(201) # STATUS CREATED
+            self._set_headers(201)  # STATUS CREATED
             new_category = create_category(post_body)
             self.wfile.write(json.dumps(new_category).encode())
         elif resource == "comments":
-            self._set_headers(201) # STATUS CREATED
+            self._set_headers(201)  # STATUS CREATED
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
-
 
     def do_PUT(self):
         content_len = int(self.headers.get('content-length', 0))
@@ -112,13 +122,13 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
 
         if resource == "categories":
-            success = True
-        
+            success = update_category(id, post_body)
+
         if success:
             self._set_headers(204)
         else:
             self._set_headers(404)
-        
+
         self.wfile.write("".encode())
 
     def do_DELETE(self):

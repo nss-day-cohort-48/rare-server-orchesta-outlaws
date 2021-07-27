@@ -1,7 +1,7 @@
 from categories.request import create_category, get_all_categories
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from users.request import get_user_by_email
+from users.request import create_new_user, get_user_by_email
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -56,7 +56,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        self._set_headers(200)
+        self._set_headers(200) # STATUS OKAY
         response = {}
         parsed = self.parse_url(self.path)
 
@@ -74,21 +74,23 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
+
         """Handles POST requests to the server
         """
-        self._set_headers(201)
+        self._set_headers(201) # STATUS CREATED
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
-
-        # Convert JSON string to a Python dictionary
+        # Co
         post_body = json.loads(post_body)
 
-        # Parse the URL
-        (resource, id) = self.parse_url(self.path)
-
+        parsed = self.parse_url(self.path)
+        resource = parsed[0].lower()
+        new_thing = None
         new_category = None
-
-        if resource == "categories":
+        if resource == "users":
+            new_thing = create_new_user(post_body)
+            self.wfile.write(json.dumps(new_thing).encode())
+        elif resource == "categories":
             new_category = create_category(post_body)
             self.wfile.write(json.dumps(new_category).encode())
 

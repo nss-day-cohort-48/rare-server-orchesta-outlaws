@@ -71,7 +71,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource.lower() == "users" and key.lower() == "email":
                 response = get_user_by_email(value)
 
-        self.wfile.write(json.dumps(response).encode())
+        self.wfile.write(response.encode())
 
     def do_POST(self):
         """Handles POST requests to the server

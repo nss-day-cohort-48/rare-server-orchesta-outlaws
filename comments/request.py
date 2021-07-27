@@ -17,7 +17,7 @@ def create_comment(new_comment):
         id = db_cursor.lastrowid
         new_comment['id'] = id
 
-    return json.dumps(new_comment)
+    return new_comment
 
 def view_comments_by_post(postID):
     '''Reader can see a list of all the comments on a post'''
@@ -41,7 +41,7 @@ def view_comments_by_post(postID):
             comment = Comment(row['id'], row['post_id'], row['author_id'],row['content'])
             comments.append(comment.__dict__)
 
-    return json.dumps(comments)
+    return comments
 
 def delete_comment(comment_id):
     '''Reader can delete a comment they have made'''

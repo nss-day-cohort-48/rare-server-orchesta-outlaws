@@ -18,7 +18,7 @@ CREATE TABLE "Users" (
   "username" varchar,
   "password" varchar,
   "profile_image_url" varchar,
-  "created_on" date,
+  "created_on" varchar,
   "active" bit
 );
 CREATE TABLE "DemotionQueue" (
@@ -42,7 +42,7 @@ CREATE TABLE "Posts" (
   "user_id" INTEGER,
   "category_id" INTEGER,
   "title" varchar,
-  "publication_date" date,
+  "publication_date" varchar,
   "image_url" varchar,
   "content" varchar,
   "approved" bit
@@ -91,3 +91,14 @@ INSERT INTO Tags ('label')
 VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url')
 VALUES ('happy', 'https://pngtree.com/so/happy');
+
+INSERT INTO Comments
+VALUES (1, 2, 3, "Testing out the create comment function")
+
+INSERT INTO Users
+VALUES(2, 'John', 'Smith', 'john@smith.com', 'Journalist','jsmith', 'password', 'profile pic', '20180115', 1)
+
+INSERT INTO Posts
+VALUES(1, 2, 2, 'Billionaires in Space', '20210726', 'www.times.com', 'test', 1)
+
+SELECT * FROM Comments

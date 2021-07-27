@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from users.request import get_user_by_email
+from comments import create_comment
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -72,8 +73,19 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
-        # TODO
-        pass
+        """Handles POST requests to the server
+        """
+        self._set_headers(201)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+        (resource, _) = self.parse_url(self.path)
+
+        new_comment = self.parse_url(self.path)
+
+        if resource == "comments":
+            new_comment = create_comment(post_body)
+            self.wfile.write(json.dumps(f"{new_comment}").encode())
 
     def do_PUT(self):
         # TODO

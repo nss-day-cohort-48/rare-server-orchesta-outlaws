@@ -18,7 +18,7 @@ CREATE TABLE "Users" (
   "username" varchar,
   "password" varchar,
   "profile_image_url" varchar,
-  "created_on" date,
+  "created_on" varchar,
   "active" bit
 );
 CREATE TABLE "DemotionQueue" (
@@ -42,7 +42,7 @@ CREATE TABLE "Posts" (
   "user_id" INTEGER,
   "category_id" INTEGER,
   "title" varchar,
-  "publication_date" date,
+  "publication_date" varchar,
   "image_url" varchar,
   "content" varchar,
   "approved" bit
@@ -92,19 +92,4 @@ VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url')
 VALUES ('happy', 'https://pngtree.com/so/happy');
 
-
-SELECT * FROM Categories;
-
-INSERT INTO Users VALUES (
-    null,
-    'Steve',
-    'Brownlee',
-    'steve@brownlee.com',
-    'I love to talk about crafting code!',
-    'steve',
-    'brownlee',
-    'https://github.com/stevebrownlee.png',
-    2021/07/26,
-    1
-  );
 

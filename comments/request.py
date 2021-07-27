@@ -14,17 +14,26 @@ def get_all_comments():
             c.post_id,
             c.author_id,
             c.content,
-            p.title comment_subject
+            p.subject comment_subject
         FROM Comments c
         JOIN Posts p
             ON p.id = c.post_id
         """)
 
         comments = []
+
         dataset = db_cursor.fetchall()
+
         for row in dataset:
             comment = Comment(row['id'], row['post_id'], row['author_id'], row['content'])
-            subject = Post(row['comment_subject'])
+
+            subject = Post(row['post_id'], row['user_id'], row['category_id'],
+                            row['title'], row['publication_date'], row['image_url'],
+                            row['content'], row['approved'])
+            
+            comment.subject = subject.__dict__
+
+            comments.append(comment.__dict__)
 
 def create_comment(new_comment):
     '''Reader/Author can add a comment to an author's post. Resulting comment will display the article title and content'''

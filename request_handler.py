@@ -83,10 +83,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
 
-        if resource == "comments":
-            new_comment = create_comment(post_body)
-            self.wfile.write(json.dumps(new_comment).encode())
-
         parsed = self.parse_url(self.path)
         resource = parsed[0].lower()
         new_thing = None
@@ -100,7 +96,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(new_category).encode())
         elif resource == "comments":
             new_comment = create_comment(post_body)
-            self.wfile.write(json.dumps(new_comment).encode()
+            self.wfile.write(json.dumps(new_comment).encode())
 
 
     def do_PUT(self):

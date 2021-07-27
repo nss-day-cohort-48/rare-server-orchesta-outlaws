@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+from users.request import login_user
 from users import register_new_user, get_user_by_email, get_single_user
 from post_reactions import get_all_post_reactions
 from categories import create_category, get_all_categories, update_category
@@ -100,14 +101,24 @@ class HandleRequests(BaseHTTPRequestHandler):
                 new_user = register_new_user(post_body)
                 self.wfile.write(json.dumps(new_user).encode())
             else:
-                # STATUS CONFLICT (used here to indicate it already exists)
-                self._set_headers(409)
+                # STATUS OKAY (used here to indicate it the request went through okay)
+                self._set_headers(200)
                 self.wfile.write(json.dumps("User already exists.").encode())
+        elif resource == "login":
+            # send 200 OKAY to indicate that the request went through
+            self._set_headers(200)
+            user_id = login_user(post_body['email'], post_body['password'])
+            if user_id is None:
+                self.wfile.write(json.dumps("Email and password do not match.").encode())
+            else:
+                self.wfile.write(json.dumps({"id": user_id}).encode())
+            
 
         if resource == "categories":
             self._set_headers(201)  # STATUS CREATED
             new_category = create_category(post_body)
             self.wfile.write(json.dumps(new_category).encode())
+
         elif resource == "comments":
             self._set_headers(201)  # STATUS CREATED
             new_comment = create_comment(post_body)

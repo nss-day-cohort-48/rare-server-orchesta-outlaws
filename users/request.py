@@ -3,10 +3,17 @@ from datetime import datetime
 from database import DB_FILE
 from models import User
 
+def login_user(email, password):
+    """If the password is correct for the given email, returns the id"""
+    user = get_user_by_email(email)
+    if password == user['password']:
+        return user['id']
+    else:
+        return None
 
 def get_single_user(id):
     """get a single user by the user_id
-    """
+        """
     with sqlite3.connect(DB_FILE) as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()

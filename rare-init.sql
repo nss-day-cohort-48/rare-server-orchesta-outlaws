@@ -18,7 +18,7 @@ CREATE TABLE "Users" (
   "username" varchar,
   "password" varchar,
   "profile_image_url" varchar,
-  "created_on" date,
+  "created_on" varchar,
   "active" bit
 );
 CREATE TABLE "DemotionQueue" (
@@ -33,7 +33,7 @@ CREATE TABLE "Subscriptions" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "follower_id" INTEGER,
   "author_id" INTEGER,
-  "created_on" date,
+  "created_on" varchar,
   FOREIGN KEY(`follower_id`) REFERENCES `Users`(`id`),
   FOREIGN KEY(`author_id`) REFERENCES `Users`(`id`)
 );
@@ -42,7 +42,7 @@ CREATE TABLE "Posts" (
   "user_id" INTEGER,
   "category_id" INTEGER,
   "title" varchar,
-  "publication_date" date,
+  "publication_date" varchar,
   "image_url" varchar,
   "content" varchar,
   "approved" bit
@@ -89,12 +89,12 @@ INSERT INTO Categories ("id", "label")
 VALUES (1, "News");
 INSERT INTO Tags ('label')
 VALUES ('JavaScript');
+INSERT INTO PostReactions ("user_id", "reaction_id", "post_id")
+VALUES (1, 1, 1);
 INSERT INTO Reactions ('label', 'image_url')
 VALUES ('happy', 'https://pngtree.com/so/happy');
-
-
-SELECT * FROM Categories;
-
+INSERT INTO Posts ('user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved')
+VALUES (1, 1, 'cassowary', '2021-07-27', 'https://cdn.britannica.com/43/138843-050-DD4F15FF/cassowary.jpg', 'cool bird', 1);
 INSERT INTO Users VALUES (
     null,
     'Steve',
@@ -107,4 +107,3 @@ INSERT INTO Users VALUES (
     2021/07/26,
     1
   );
-

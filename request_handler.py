@@ -1,7 +1,10 @@
-from categories.request import create_category, get_all_categories, update_category
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from users.request import create_new_user, get_user_by_email
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from post_reactions.request import get_all_post_reactions
+from categories.request import create_category, get_all_categories, update_category
+from users.request import create_new_user, get_single_user, get_user_by_email
+from posts.request import get_posts_by_user
+from comments import create_comment
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -64,35 +67,45 @@ class HandleRequests(BaseHTTPRequestHandler):
             ( resource, id ) = parsed
             if resource.lower() == "categories":
                 response = get_all_categories()
+            elif resource == "postreactions":
+                response = get_all_post_reactions() 
+            elif resource == "users":
+                if id is not None:
+                    response = get_single_user(id)
 
         else:
             # we got query params!
             (resource, key, value) = parsed
             if resource.lower() == "users" and key.lower() == "email":
                 response = get_user_by_email(value)
+            elif resource.lower() == "posts" and key.lower() == "user_id":
+                response = get_posts_by_user(value)
 
         self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
-
         """Handles POST requests to the server
         """
-        self._set_headers(201) # STATUS CREATED
+        self._set_headers(201)
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
-        # Co
         post_body = json.loads(post_body)
 
         parsed = self.parse_url(self.path)
         resource = parsed[0].lower()
         new_thing = None
         new_category = None
+        new_comment = None
         if resource == "users":
             new_thing = create_new_user(post_body)
             self.wfile.write(json.dumps(new_thing).encode())
         elif resource == "categories":
             new_category = create_category(post_body)
             self.wfile.write(json.dumps(new_category).encode())
+        elif resource == "comments":
+            new_comment = create_comment(post_body)
+            self.wfile.write(json.dumps(new_comment).encode())
+
 
     def do_PUT(self):
         content_len = int(self.headers.get('content-length', 0))

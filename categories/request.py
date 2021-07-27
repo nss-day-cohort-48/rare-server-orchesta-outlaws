@@ -34,4 +34,4 @@ def create_category(new_cat):
         """, (new_cat["label"], ))
         id = db_cursor.lastrowid
         new_cat["id"] = id
-    return json.dumps(new_cat)
+    return new_cat

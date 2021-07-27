@@ -90,7 +90,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "categories":
             new_category = create_category(post_body)
-            self.wfile.write(f"{new_category}".encode())
+            self.wfile.write(json.dumps(new_category).encode())
 
     def do_PUT(self):
         content_len = int(self.headers.get('content-length', 0))

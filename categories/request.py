@@ -1,6 +1,5 @@
 from models.category import Category
 import sqlite3
-import json
 
 def get_all_categories():
     """fetch call to GET all categories; available now to all users; in future, only for admin side
@@ -35,3 +34,24 @@ def create_category(new_cat):
         id = db_cursor.lastrowid
         new_cat["id"] = id
     return new_cat
+
+def update_category(id, new_cat):
+    """PUT fetch call for Categories table
+
+    Args:
+        id ([int]): primary key
+        new_cat ([dict]): dict containing key-value pairs for entire category entry
+    """
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        UPDATE Categories
+            SET
+                label = ?
+        WHERE id = ?
+        """, (new_cat["label"], id, ))
+        rows_affected = db_cursor.rowcount
+    if rows_affected == 0:
+        return False
+    else:
+        return True

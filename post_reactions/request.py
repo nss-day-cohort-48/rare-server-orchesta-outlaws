@@ -2,53 +2,6 @@ import sqlite3
 from models.post_reactions import PostReaction
 from models.reactions import Reaction
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def get_post_reactions_by_post_id(post_id):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row

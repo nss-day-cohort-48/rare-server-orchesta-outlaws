@@ -3,8 +3,8 @@ from models import Reaction, PostReaction
 from database import DB_FILE
 
 def get_post_reactions_by_post_id(post_id):
-    with sqlite3.connect("./rare.db") as conn:
-      conn.row_factory = sqlite3.Row
+    with sqlite3.connect(DB_FILE) as conn:
+        conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
         db_cursor.execute("""
         SELECT

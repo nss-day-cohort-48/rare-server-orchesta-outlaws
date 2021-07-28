@@ -1,5 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+from post_reactions.request import create_post_reaction
+from reactions.request import create_reaction
 from users.request import login_user
 from users import register_new_user, get_user_by_email, get_single_user, create_new_user
 from post_reactions import get_all_post_reactions, get_post_reactions_by_post_id
@@ -114,16 +116,22 @@ class HandleRequests(BaseHTTPRequestHandler):
                     "Email and password do not match.").encode())
             else:
                 self.wfile.write(json.dumps({"id": user_id}).encode())
-
-        if resource == "categories":
+        elif resource == "categories":
             self._set_headers(201)  # STATUS CREATED
             new_category = create_category(post_body)
             self.wfile.write(json.dumps(new_category).encode())
-
         elif resource == "comments":
             self._set_headers(201)  # STATUS CREATED
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
+        elif resource == "reactions":
+            self._set_headers(201)
+            new_reaction = create_reaction(post_body)
+            self.wfile.write(json.dumps(new_reaction).encode())
+        elif resource == "post_reactions":
+            self._set_headers(201)
+            new_post_reaction = create_post_reaction(post_body)
+            self.wfile.write(json.dumps(new_post_reaction).encode())
 
 
     def do_PUT(self):

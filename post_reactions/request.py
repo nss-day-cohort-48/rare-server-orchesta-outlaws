@@ -47,3 +47,16 @@ def get_all_post_reactions():
                             row['post_id'])
             post_reactions.append(post_reaction.__dict__)
     return post_reactions
+
+def create_post_reaction(new_post_reaction):
+    with sqlite3.connect(DB_FILE) as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        INSERT INTO PostReactions
+            (user_id, reaction_id, post_id)
+        VALUES
+            (?, ?, ?)
+        """, (new_post_reaction["user_id"], new_post_reaction["reaction_id"], new_post_reaction["post_id"], ))
+        id = db_cursor.lastrowid
+        new_post_reaction["id"] = id
+    return new_post_reaction

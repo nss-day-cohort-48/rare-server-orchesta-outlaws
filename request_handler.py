@@ -1,6 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from users.request import login_user
 from users import register_new_user, get_user_by_email, get_single_user
 from post_reactions import get_all_post_reactions
 from categories import create_category, get_all_categories, update_category
@@ -9,7 +8,7 @@ from comments import create_comment
 
 
 class HandleRequests(BaseHTTPRequestHandler):
-    def parse_url(self, path): # pylint: disable=missing-docstring
+    def parse_url(self, path):
         path_params = path.split("/")
         resource = path_params[1]
 
@@ -59,7 +58,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                          'X-Requested-With, Content-Type, Accept')
         self.end_headers()
 
-    def do_GET(self):  # pylint: disable=missing-docstring
+    def do_GET(self):
         self._set_headers(200)  # STATUS OKAY
         response = {}
         parsed = self.parse_url(self.path)
@@ -84,7 +83,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         self.wfile.write(json.dumps(response).encode())
 
-    def do_POST(self):  # pylint: disable=missing-docstring
+    def do_POST(self):
+        """Handles POST requests to the server
+        """
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
@@ -99,30 +100,20 @@ class HandleRequests(BaseHTTPRequestHandler):
                 new_user = register_new_user(post_body)
                 self.wfile.write(json.dumps(new_user).encode())
             else:
-                # STATUS OKAY (used here to indicate it the request went through okay)
-                self._set_headers(200)
+                # STATUS CONFLICT (used here to indicate it already exists)
+                self._set_headers(409)
                 self.wfile.write(json.dumps("User already exists.").encode())
-        elif resource == "login":
-            # send 200 OKAY to indicate that the request went through
-            self._set_headers(200)
-            user_id = login_user(post_body['email'], post_body['password'])
-            if user_id is None:
-                self.wfile.write(json.dumps(
-                    "Email and password do not match.").encode())
-            else:
-                self.wfile.write(json.dumps({"id": user_id}).encode())
 
         if resource == "categories":
             self._set_headers(201)  # STATUS CREATED
             new_category = create_category(post_body)
             self.wfile.write(json.dumps(new_category).encode())
-
         elif resource == "comments":
             self._set_headers(201)  # STATUS CREATED
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
 
-    def do_PUT(self):  # pylint: disable=missing-docstring
+    def do_PUT(self):
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
@@ -140,12 +131,12 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         self.wfile.write("".encode())
 
-    def do_DELETE(self): # pylint: disable=missing-docstring
+    def do_DELETE(self):
         # TODO
         pass
 
 
-def main(): # pylint: disable=missing-docstring
+def main():
     host = ''
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()

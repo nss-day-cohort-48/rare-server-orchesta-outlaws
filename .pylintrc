@@ -1,7 +1,5 @@
 [FORMAT]
-good-names=i,
-    j,
-    ex,
+good-names=ex,
     pk,
     id,
     do_PUT,
@@ -11,5 +9,4 @@ good-names=i,
     do_DELETE
 
 [MESSAGES CONTROL]
-disable=broad-except,redefined-builtin,missing-module-docstring
-
+disable=broad-except,redefined-builtin,missing-module-docstring,no-member

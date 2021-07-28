@@ -1,14 +1,16 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from users.request import get_user_by_email
+from users.request import login_user
+from users import register_new_user, get_user_by_email, get_single_user, create_new_user
+from post_reactions import get_all_post_reactions, get_post_reactions_by_post_id
+from categories import create_category, get_all_categories, update_category
+from posts import get_posts_by_user
 from comments import create_comment
-from users.request import create_new_user, get_user_by_email
-from post_reactions.request import get_post_reactions_by_post_id
-from categories.request import create_category, get_all_categories
+
 
 
 class HandleRequests(BaseHTTPRequestHandler):
-    def parse_url(self, path):
+    def parse_url(self, path): # pylint: disable=missing-docstring
         path_params = path.split("/")
         resource = path_params[1]
 
@@ -58,15 +60,20 @@ class HandleRequests(BaseHTTPRequestHandler):
                          'X-Requested-With, Content-Type, Accept')
         self.end_headers()
 
-    def do_GET(self):
-        self._set_headers(200) # STATUS OKAY
+    def do_GET(self):  # pylint: disable=missing-docstring
+        self._set_headers(200)  # STATUS OKAY
         response = {}
         parsed = self.parse_url(self.path)
 
         if len(parsed) <= 2:
-            ( resource, id ) = parsed
+            (resource, id) = parsed
             if resource.lower() == "categories":
                 response = get_all_categories()
+            elif resource == "postreactions":
+                response = get_all_post_reactions()
+            elif resource == "users":
+                if id is not None:
+                    response = get_single_user(id)
 
         else:
             # we got query params!
@@ -75,29 +82,46 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_user_by_email(value)
             elif resource.lower() == "post_reactions" and key.lower() == "post_id":
                 response = get_post_reactions_by_post_id(value)
+            elif resource.lower() == "posts" and key.lower() == "user_id":
+                response = get_posts_by_user(value)
 
         self.wfile.write(json.dumps(response).encode())
 
-    def do_POST(self):
-        """Handles POST requests to the server
-        """
-        self._set_headers(201)
+    def do_POST(self):  # pylint: disable=missing-docstring
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
 
         parsed = self.parse_url(self.path)
         resource = parsed[0].lower()
-        new_thing = None
-        new_category = None
-        new_comment = None
-        if resource == "users":
-            new_thing = create_new_user(post_body)
-            self.wfile.write(json.dumps(new_thing).encode())
-        elif resource == "categories":
+
+        if resource == "register":
+            # if the user specified by the email in the post body does exist:
+            if get_user_by_email(post_body['email']) is None:
+                self._set_headers(201)  # STATUS CREATED
+                new_user = register_new_user(post_body)
+                self.wfile.write(json.dumps(new_user).encode())
+            else:
+                # STATUS OKAY (used here to indicate it the request went through okay)
+                self._set_headers(200)
+                self.wfile.write(json.dumps("User already exists.").encode())
+        elif resource == "login":
+            # send 200 OKAY to indicate that the request went through
+            self._set_headers(200)
+            user_id = login_user(post_body['email'], post_body['password'])
+            if user_id is None:
+                self.wfile.write(json.dumps(
+                    "Email and password do not match.").encode())
+            else:
+                self.wfile.write(json.dumps({"id": user_id}).encode())
+
+        if resource == "categories":
+            self._set_headers(201)  # STATUS CREATED
             new_category = create_category(post_body)
             self.wfile.write(json.dumps(new_category).encode())
+
         elif resource == "comments":
+            self._set_headers(201)  # STATUS CREATED
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
 
@@ -113,21 +137,21 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
 
         if resource == "categories":
-            success = True
-        
+            success = update_category(id, post_body)
+
         if success:
             self._set_headers(204)
         else:
             self._set_headers(404)
-        
+
         self.wfile.write("".encode())
 
-    def do_DELETE(self):
+    def do_DELETE(self): # pylint: disable=missing-docstring
         # TODO
         pass
 
 
-def main():
+def main(): # pylint: disable=missing-docstring
     host = ''
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()

@@ -33,7 +33,7 @@ CREATE TABLE "Subscriptions" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "follower_id" INTEGER,
   "author_id" INTEGER,
-  "created_on" date,
+  "created_on" varchar,
   FOREIGN KEY(`follower_id`) REFERENCES `Users`(`id`),
   FOREIGN KEY(`author_id`) REFERENCES `Users`(`id`)
 );
@@ -89,23 +89,21 @@ INSERT INTO Categories ("id", "label")
 VALUES (1, "News");
 INSERT INTO Tags ('label')
 VALUES ('JavaScript');
-INSERT INTO Reactions ('label', 'image_url')
-VALUES ('happy', 'https://pngtree.com/so/happy');
 INSERT INTO PostReactions ("user_id", "reaction_id", "post_id")
 VALUES (1, 1, 1);
-
-SELECT * FROM Reactions;
-SELECT * FROM PostReactions;
-
-SELECT
-  a.id,
-  a.user_id,
-  a.reaction_id,
-  a.post_id,
-  b.label reaction_label,
-  b.image_url image_url
-FROM PostReactions a
-JOIN Reactions b
-  ON b.id = a.reaction_id
-WHERE a.post_id = 1;
-
+INSERT INTO Reactions ('label', 'image_url')
+VALUES ('happy', 'https://pngtree.com/so/happy');
+INSERT INTO Posts ('user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved')
+VALUES (1, 1, 'cassowary', '2021-07-27', 'https://cdn.britannica.com/43/138843-050-DD4F15FF/cassowary.jpg', 'cool bird', 1);
+INSERT INTO Users VALUES (
+    null,
+    'Steve',
+    'Brownlee',
+    'steve@brownlee.com',
+    'I love to talk about crafting code!',
+    'steve',
+    'brownlee',
+    'https://github.com/stevebrownlee.png',
+    2021/07/26,
+    1
+  );

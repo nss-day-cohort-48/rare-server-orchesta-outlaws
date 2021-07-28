@@ -8,6 +8,7 @@ from post_reactions import get_all_post_reactions, get_post_reactions_by_post_id
 from categories import create_category, get_all_categories, update_category
 from posts import get_posts_by_user
 from comments import create_comment, get_all_comments, view_comments_by_post
+from tags import get_all_tags, create_tag, search_by_tag
 
 
 
@@ -75,6 +76,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_all_post_reactions()
             elif resource == "comments":
                 response = get_all_comments()
+            elif resource == "tags":
+                response = get_all_tags()
             elif resource == "users":
                 if id is not None:
                     response = get_single_user(id)
@@ -91,6 +94,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_posts_by_user(value)
             elif resource.lower() == "comments" and key.lower() == "post_id":
                 response = view_comments_by_post(value)
+            elif resource.lower() == "comments" and key.lower() == "post_id":
 
         self.wfile.write(json.dumps(response).encode())
 
@@ -129,6 +133,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             self._set_headers(201)  # STATUS CREATED
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
+        elif resource == "tags":
+            self._set_headers(201)  # STATUS CREATED
+            new_tag = create_tag(post_body)
+            self.wfile.write(json.dumps(new_tag).encode())
         elif resource == "reactions":
             self._set_headers(201)
             new_reaction = create_reaction(post_body)

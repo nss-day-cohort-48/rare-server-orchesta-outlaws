@@ -35,3 +35,4 @@ def get_posts_by_user(id):
             posts.append(post.__dict__)
 
     return posts
+

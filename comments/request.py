@@ -14,7 +14,12 @@ def get_all_comments():
             c.post_id,
             c.author_id,
             c.content,
-            p.title subject_name
+            p.category_id category_id,
+            p.title subject_title,
+            p.publication_date publication_date,
+            p.image_url image_url,
+            p.content content,
+            p.approved approved
         FROM Comments c
         JOIN Posts p
             ON p.id = c.post_id
@@ -27,7 +32,7 @@ def get_all_comments():
         for row in dataset:
             comment = Comment(row['id'], row['post_id'], row['author_id'], row['content'])
             
-            post = Post(row['id'], row['user_id'], row['category_id'], row['title'], row['publication_date'], row['image_url'], row['content'], row['approved'])
+            post = Post(row['id'], row['author_id'], row['category_id'], row['subject_title'], row['publication_date'], row['image_url'], row['content'], row['approved'])
            
             comment.title = post.__dict__
             
@@ -78,6 +83,7 @@ def view_comments_by_post(postID):
 
 def delete_comment(comment_id):
     '''Reader can delete a comment they have made'''
+    
 
 def edit_comment(comment_id):
     '''Reader can edit a comment they have made'''

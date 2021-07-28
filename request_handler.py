@@ -69,7 +69,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             (resource, id) = parsed
             if resource.lower() == "categories":
                 response = get_all_categories()
-            elif resource == "postreactions":
+            elif resource == "post_reactions":
                 response = get_all_post_reactions()
             elif resource == "users":
                 if id is not None:

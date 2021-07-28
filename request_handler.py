@@ -7,7 +7,7 @@ from users import register_new_user, get_user_by_email, get_single_user, create_
 from post_reactions import get_all_post_reactions, get_post_reactions_by_post_id
 from categories import create_category, get_all_categories, update_category
 from posts import get_posts_by_user
-from comments import create_comment
+from comments import create_comment, get_all_comments, view_comments_by_post
 
 
 
@@ -73,9 +73,12 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_all_categories()
             elif resource == "post_reactions":
                 response = get_all_post_reactions()
+            elif resource == "comments":
+                response = get_all_comments()
             elif resource == "users":
                 if id is not None:
                     response = get_single_user(id)
+
 
         else:
             # we got query params!
@@ -86,6 +89,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_post_reactions_by_post_id(value)
             elif resource.lower() == "posts" and key.lower() == "user_id":
                 response = get_posts_by_user(value)
+            elif resource.lower() == "comments" and key.lower() == "post_id":
+                response = view_comments_by_post(value)
 
         self.wfile.write(json.dumps(response).encode())
 

@@ -107,3 +107,9 @@ INSERT INTO Users VALUES (
     2021/07/26,
     1
   );
+
+INSERT INTO Comments VALUES(null, 1, 2, "Great Article!");
+
+INSERT INTO Posts VALUES(null, 2, 1, "Billionaires in Space", 20210726, "Image", "Blah Blah Blah Bezos", 1);
+
+INSERT INTO Users VALUES(null, "Dan", "Jones", "dan@jones.com", "It's Danny J","dannyj", "hello", "image", 20210720, 1);

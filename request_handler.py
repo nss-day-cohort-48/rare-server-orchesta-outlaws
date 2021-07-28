@@ -1,11 +1,12 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from users.request import login_user
-from users import register_new_user, get_user_by_email, get_single_user
-from post_reactions import get_all_post_reactions
+from users import register_new_user, get_user_by_email, get_single_user, create_new_user
+from post_reactions import get_all_post_reactions, get_post_reactions_by_post_id
 from categories import create_category, get_all_categories, update_category
 from posts import get_posts_by_user
 from comments import create_comment
+
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -68,7 +69,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             (resource, id) = parsed
             if resource.lower() == "categories":
                 response = get_all_categories()
-            elif resource == "postreactions":
+            elif resource == "post_reactions":
                 response = get_all_post_reactions()
             elif resource == "users":
                 if id is not None:
@@ -79,6 +80,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             (resource, key, value) = parsed
             if resource.lower() == "users" and key.lower() == "email":
                 response = get_user_by_email(value)
+            elif resource.lower() == "post_reactions" and key.lower() == "post_id":
+                response = get_post_reactions_by_post_id(value)
             elif resource.lower() == "posts" and key.lower() == "user_id":
                 response = get_posts_by_user(value)
 
@@ -122,7 +125,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
 
-    def do_PUT(self):  # pylint: disable=missing-docstring
+
+    def do_PUT(self):
+        """PUT fetch call handler
+        """
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)

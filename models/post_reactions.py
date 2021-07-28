@@ -1,6 +1,5 @@
-class Post_Reaction():
-
-    """class to create a post reaction instance
+class PostReaction():
+    """PostReaction class
     """
     def __init__(self, id, user_id, reaction_id, post_id):
         self.id = id

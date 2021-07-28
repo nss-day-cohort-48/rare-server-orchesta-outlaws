@@ -71,10 +71,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             elif resource == "postreactions":
                 response = get_all_post_reactions()
             elif resource == "comments":
-                if id is not None:
-                    response = view_comments_by_post(id)
-                else: 
-                    response = get_all_comments()
+                response = get_all_comments()
             elif resource == "users":
                 if id is not None:
                     response = get_single_user(id)
@@ -87,6 +84,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_user_by_email(value)
             elif resource.lower() == "posts" and key.lower() == "user_id":
                 response = get_posts_by_user(value)
+            elif resource.lower() == "comments" and key.lower() == "post_id":
+                response = view_comments_by_post(value)
 
         self.wfile.write(json.dumps(response).encode())
 

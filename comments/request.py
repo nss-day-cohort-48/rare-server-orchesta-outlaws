@@ -73,11 +73,15 @@ def view_comments_by_post(postID):
         WHERE c.post_id = ?
         """, (postID, ))
 
-        data = db_cursor.fetchone()
-
-        comment = Comment(data['id'], data['post_id'], data['author_id'], data['content'])
+        comments = []
+        dataset = db_cursor.fetchall()
         
-        return comment.__dict__
+        for row in dataset:
+
+            comment = Comment(row['id'], row['post_id'], row['author_id'], row['content'])
+            comments.append(comment.__dict__)
+        
+        return comments
 
 def delete_comment(comment_id):
     '''Reader can delete a comment they have made'''

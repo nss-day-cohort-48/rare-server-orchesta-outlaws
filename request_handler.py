@@ -7,7 +7,7 @@ from users import register_new_user, get_user_by_email, get_single_user, create_
 from post_reactions import get_all_post_reactions, get_post_reactions_by_post_id
 from categories import create_category, get_all_categories, update_category
 from posts import get_posts_by_user
-from comments import create_comment, get_all_comments, view_comments_by_post
+from comments import create_comment, get_all_comments, view_comments_by_post, delete_comment, edit_comment
 
 
 
@@ -151,6 +151,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "categories":
             success = update_category(id, post_body)
+        if resource == "comments":
+            success = edit_comment(id, post_body)
 
         if success:
             self._set_headers(204)
@@ -160,8 +162,15 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write("".encode())
 
     def do_DELETE(self): # pylint: disable=missing-docstring
-        # TODO
-        pass
+        """Handles DELETE requests to the server
+        """
+        self._set_headers(204)
+        (resource, id) = self.parse_url(self.path)
+
+        if resource == "comments":
+            delete_comment(id)
+    
+        self.wfile.write("".encode())
 
 
 def main(): # pylint: disable=missing-docstring

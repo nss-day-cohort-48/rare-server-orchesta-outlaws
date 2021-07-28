@@ -5,7 +5,7 @@ from users import register_new_user, get_user_by_email, get_single_user
 from post_reactions import get_all_post_reactions
 from categories import create_category, get_all_categories, update_category
 from posts import get_posts_by_user
-from comments import create_comment
+from comments import create_comment, get_all_comments
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -70,6 +70,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_all_categories()
             elif resource == "postreactions":
                 response = get_all_post_reactions()
+            elif resource == "comments":
+                response = get_all_comments()
             elif resource == "users":
                 if id is not None:
                     response = get_single_user(id)

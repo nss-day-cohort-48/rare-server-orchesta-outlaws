@@ -60,26 +60,24 @@ def create_comment(new_comment):
 def view_comments_by_post(postID):
     '''Reader can see a list of all the comments on a post'''
     with sqlite3.connect("./rare.db") as conn:
-      db_cursor = conn.cursor()
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-      db_cursor.execute("""
-      SELECT
-        c.id
-        c.post_id
-        c.author_id
-        c.content
-      FROM Comments c
-      WHERE c.post_id = ?
-      """, ( postID, ))
+        db_cursor.execute("""
+        SELECT
+            c.id,
+            c.post_id,
+            c.author_id,
+            c.content
+        FROM Comments c
+        WHERE c.post_id = ?
+        """, (postID, ))
 
-      comments = []
-      dataset = db_cursor.fetchall()
+        data = db_cursor.fetchone()
 
-      for row in dataset:
-            comment = Comment(row['id'], row['post_id'], row['author_id'],row['content'])
-            comments.append(comment.__dict__)
-
-    return comments
+        comment = Comment(data['id'], data['post_id'], data['author_id'], data['content'])
+        
+        return comment.__dict__
 
 def delete_comment(comment_id):
     '''Reader can delete a comment they have made'''

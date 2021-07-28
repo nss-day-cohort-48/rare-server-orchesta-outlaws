@@ -5,7 +5,7 @@ from users import register_new_user, get_user_by_email, get_single_user
 from post_reactions import get_all_post_reactions
 from categories import create_category, get_all_categories, update_category
 from posts import get_posts_by_user
-from comments import create_comment, get_all_comments
+from comments import create_comment, get_all_comments, view_comments_by_post
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -71,10 +71,14 @@ class HandleRequests(BaseHTTPRequestHandler):
             elif resource == "postreactions":
                 response = get_all_post_reactions()
             elif resource == "comments":
-                response = get_all_comments()
+                if id is not None:
+                    response = view_comments_by_post(id)
+                else: 
+                    response = get_all_comments()
             elif resource == "users":
                 if id is not None:
                     response = get_single_user(id)
+
 
         else:
             # we got query params!

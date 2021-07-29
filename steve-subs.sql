@@ -76,4 +76,4 @@ VALUES(
 -- make steve follow johhny
 INSERT INTO Subscriptions VALUES(null, 1, 101, "20210729");
 -- make steve follow patricia
-INSERT INTO Subscriptions VALUES(null, 1, 102, "20210729");
+INSERT INTO Subscriptions VALUES(null, 1, 100, "20210729");

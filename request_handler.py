@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+from posts.request import get_subbed_posts_for_user
 from reactions.request import create_reaction
 from users.request import login_user
 from users import register_new_user, get_user_by_email, get_single_user
@@ -96,6 +97,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_post_reactions_by_post_id(value)
             elif resource.lower() == "posts" and key.lower() == "user_id":
                 response = get_posts_by_user(value)
+            elif resource.lower() == "subs" and key.lower() == "follower_id":
+                response = get_subbed_posts_for_user(value)
             elif resource.lower() == "comments" and key.lower() == "post_id":
                 response = view_comments_by_post(value)
 

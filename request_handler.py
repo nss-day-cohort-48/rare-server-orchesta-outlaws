@@ -9,7 +9,7 @@ from categories import create_category, get_all_categories, update_category
 from posts import get_posts_by_user
 from comments import create_comment, get_all_comments, view_comments_by_post, edit_comment,delete_comment
 from tags import get_all_tags, create_tag
-from post_tags import search_post_by_tag, get_all_posttags
+from post_tags import search_post_by_tag, get_all_posttags, add_tag_to_post, remove_tag
 
 
 
@@ -97,7 +97,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_posts_by_user(value)
             elif resource.lower() == "comments" and key.lower() == "post_id":
                 response = view_comments_by_post(value)
-            elif resource.lower() == "posts" and key.lower() == "tag":
+            elif resource.lower() == "posts" and key.lower() == "label":
                 response = search_post_by_tag(value)
             
         self.wfile.write(json.dumps(response).encode())
@@ -149,6 +149,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             self._set_headers(201)
             new_post_reaction = create_post_reaction(post_body)
             self.wfile.write(json.dumps(new_post_reaction).encode())
+        elif resource == "posttags":
+            self._set_headers(201)
+            new_post_tag = add_tag_to_post(post_body)
+            self.wfile.write(json.dumps(new_post_tag).encode())
 
 
     def do_PUT(self):
@@ -181,6 +185,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "comments":
             delete_comment(id)
+        elif resource == "posttags":
+            remove_tag(id)
     
         self.wfile.write("".encode())
 

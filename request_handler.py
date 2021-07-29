@@ -6,7 +6,7 @@ from users.request import login_user
 from users import register_new_user, get_user_by_email, get_single_user, create_new_user
 from post_reactions import get_all_post_reactions, get_post_reactions_by_post_id
 from categories import create_category, get_all_categories, update_category
-from posts import get_posts_by_user
+from posts import get_all_posts, get_single_post, get_posts_by_user, create_post, update_post, delete_post
 from comments import create_comment, get_all_comments, view_comments_by_post, edit_comment,delete_comment
 from tags import get_all_tags, create_tag
 from post_tags import search_post_by_tag, get_all_posttags
@@ -84,6 +84,11 @@ class HandleRequests(BaseHTTPRequestHandler):
             elif resource == "users":
                 if id is not None:
                     response = get_single_user(id)
+            elif resource == "posts":
+                if id is not None:
+                    response = get_single_post(id)
+                else:
+                    response = get_all_posts()
 
 
         else:
@@ -149,6 +154,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             self._set_headers(201)
             new_post_reaction = create_post_reaction(post_body)
             self.wfile.write(json.dumps(new_post_reaction).encode())
+        elif resource == "posts":
+            self._set_headers(201)
+            new_post = create_post(post_body)
+            self.wfile.write(json.dumps(new_post).encode())
 
 
     def do_PUT(self):
@@ -165,6 +174,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = update_category(id, post_body)
         if resource == "comments":
             success = edit_comment(id, post_body)
+        if resource == "posts":
+            success = update_post(id, post_body)
 
         if success:
             self._set_headers(204)
@@ -181,6 +192,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "comments":
             delete_comment(id)
+        elif resource == "posts":
+            delete_post(id)
     
         self.wfile.write("".encode())
 

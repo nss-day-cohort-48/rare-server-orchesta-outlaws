@@ -43,12 +43,12 @@ def get_all_posts():
                             row['title'], row['publication_date'], row['image_url'],
                             row['content'], row['approved'])
 
-            user = User(row['id'], row['first_name'], row['last_name'], row['email'],
+            user = User(row['user_id'], row['first_name'], row['last_name'], row['email'],
                             row['bio'], row['username'], row['password'],
                             row['profile_image_url'], row['created_on'], row['active'])
             post.user = user.__dict__
 
-            category = Category(row['id'], row['category_label'])
+            category = Category(row['category_id'], row['category_label'])
             post.category = category.__dict__
 
             posts.append(post.__dict__)
@@ -59,7 +59,7 @@ def get_all_posts():
 def get_single_post(id):
     """Get a single post by its id
     """
-    with sqlite3.connect("./kennel.db") as conn:
+    with sqlite3.connect(DB_FILE) as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
         db_cursor.execute("""
@@ -96,12 +96,12 @@ def get_single_post(id):
                             data['title'], data['publication_date'], data['image_url'],
                             data['content'], data['approved'])
 
-        user = User(data['id'], data['first_name'], data['last_name'], data['email'],
+        user = User(data['user_id'], data['first_name'], data['last_name'], data['email'],
                             data['bio'], data['username'], data['password'],
                             data['profile_image_url'], data['created_on'], data['active'])
         post.user = user.__dict__
 
-        category = Category(data['id'], data['category_label'])
+        category = Category(data['category_id'], data['category_label'])
         post.category = category.__dict__
 
     return post.__dict__
@@ -135,7 +135,7 @@ def get_posts_by_user(id):
             post = Post(row['id'], row['user_id'], row['category_id'],
                             row['title'], row['publication_date'], row['image_url'],
                             row['content'], row['approved'])
-            category = Category(row['id'], row['category_label'])
+            category = Category(row['category_id'], row['category_label'])
             post.category = category.__dict__
             posts.append(post.__dict__)
 

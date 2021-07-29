@@ -97,7 +97,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_posts_by_user(value)
             elif resource.lower() == "comments" and key.lower() == "post_id":
                 response = view_comments_by_post(value)
-            elif resource.lower() == "posttags" and key.lower() == "tag":
+            elif resource.lower() == "posts" and key.lower() == "tag":
                 response = search_post_by_tag(value)
             
         self.wfile.write(json.dumps(response).encode())

@@ -110,8 +110,12 @@ INSERT INTO Users VALUES (
 
 INSERT INTO Comments VALUES(null, 1, 2, "Great Article!");
 
+<<<<<<< HEAD
 INSERT INTO Posts VALUES(null, 2, 1, "Billionaires in Space", 20210726, "Image", "Blah Blah Blah Bezos", 1);
 INSERT INTO PostTags VALUES(null, 2, 1);
+=======
+INSERT INTO Posts VALUES(null, 2, 1, "Billionaires in Space", "20210726", "Image", "Blah Blah Blah Bezos", 1);
+>>>>>>> 9632a709ee01e2a8a95cac3160ece08696b9626e
 
 INSERT INTO Users VALUES(null, "Dan", "Jones", "dan@jones.com", "It's Danny J","dannyj", "hello", "image", 20210720, 1);
 

@@ -135,8 +135,7 @@ def get_posts_by_user(id):
                             row['title'], row['publication_date'], row['image_url'],
                             row['content'], row['approved'])
             category = Category(row['category_id'], row['category_label'])
-                        row['title'], row['publication_date'], row['image_url'],
-                        row['content'], row['approved'])
+
             post.category = category.__dict__
             posts.append(post.__dict__)
 

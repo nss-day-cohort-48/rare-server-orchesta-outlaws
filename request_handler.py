@@ -7,7 +7,9 @@ from users import register_new_user, get_user_by_email, get_single_user, create_
 from post_reactions import get_all_post_reactions, get_post_reactions_by_post_id
 from categories import create_category, get_all_categories, update_category
 from posts import get_posts_by_user
-from comments import create_comment, get_all_comments, view_comments_by_post, delete_comment, edit_comment
+from comments import create_comment, get_all_comments, view_comments_by_post, edit_comment,delete_comment
+from tags import get_all_tags, create_tag
+from post_tags import search_post_by_tag, get_all_posttags
 
 
 
@@ -75,6 +77,10 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_all_post_reactions()
             elif resource == "comments":
                 response = get_all_comments()
+            elif resource == "tags":
+                response = get_all_tags()
+            elif resource == "posttags":
+                response = get_all_posttags()
             elif resource == "users":
                 if id is not None:
                     response = get_single_user(id)
@@ -91,7 +97,9 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_posts_by_user(value)
             elif resource.lower() == "comments" and key.lower() == "post_id":
                 response = view_comments_by_post(value)
-
+            elif resource.lower() == "posts" and key.lower() == "tag":
+                response = search_post_by_tag(value)
+            
         self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):  # pylint: disable=missing-docstring
@@ -129,6 +137,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             self._set_headers(201)  # STATUS CREATED
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
+        elif resource == "tags":
+            self._set_headers(201)  # STATUS CREATED
+            new_tag = create_tag(post_body)
+            self.wfile.write(json.dumps(new_tag).encode())
         elif resource == "reactions":
             self._set_headers(201)
             new_reaction = create_reaction(post_body)

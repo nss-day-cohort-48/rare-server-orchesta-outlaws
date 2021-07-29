@@ -84,32 +84,22 @@ CREATE TABLE "Categories" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "label" varchar
 );
---
-INSERT INTO Categories ("id", "label")
-VALUES (1, "News");
-INSERT INTO Tags ('label')
-VALUES ('JavaScript');
-INSERT INTO PostReactions ("user_id", "reaction_id", "post_id")
-VALUES (1, 1, 1);
-INSERT INTO Reactions ('label', 'image_url')
-VALUES ('happy', 'https://pngtree.com/so/happy');
-INSERT INTO Posts ('user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved')
-VALUES (1, 1, 'cassowary', '2021-07-27', 'https://cdn.britannica.com/43/138843-050-DD4F15FF/cassowary.jpg', 'cool bird', 1);
-INSERT INTO Users VALUES (
-    null,
-    'Steve',
-    'Brownlee',
-    'steve@brownlee.com',
-    'I love to talk about crafting code!',
-    'steve',
-    'brownlee',
-    'https://github.com/stevebrownlee.png',
-    2021/07/26,
-    1
-  );
-
+-- INIT DATA FOR TESTING
+-- CATEGORIES
+INSERT INTO Categories ("id", "label") VALUES (1, "News");
+-- TAGS
+INSERT INTO Tags ('label') VALUES ('JavaScript');
+INSERT INTO Tags ('label') VALUES("Python");
+-- REACTIONS
+INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
+INSERT INTO Users VALUES (null, 'Steve', 'Brownlee', 'steve@brownlee.com', 'I love to talk about crafting code!', 'steve', 'brownlee', 'https://github.com/stevebrownlee.png', "20210726", 1);
+INSERT INTO Users VALUES(null, "Dan", "Jones", "dan@jones.com", "It's Danny J","dannyj", "hello", "image", "20210720", 1);
+-- COMMENTS
 INSERT INTO Comments VALUES(null, 1, 2, "Great Article!");
+-- POSTS and their relationships with TAGS and REACTIONS
+INSERT INTO Posts VALUES (null, 1, 1, 'cassowary', '2021-07-27', 'https://cdn.britannica.com/43/138843-050-DD4F15FF/cassowary.jpg', 'cool bird', 1);
+INSERT INTO PostReactions ("user_id", "reaction_id", "post_id") VALUES (1, 1, 1);
+INSERT INTO Posts VALUES(null, 2, 1, "Billionaires in Space", "20210726", "Image", "Blah Blah Blah Bezos", 1);
+INSERT INTO PostTags VALUES(null, 2, 1);
 
-INSERT INTO Posts VALUES(null, 2, 1, "Billionaires in Space", 20210726, "Image", "Blah Blah Blah Bezos", 1);
 
-INSERT INTO Users VALUES(null, "Dan", "Jones", "dan@jones.com", "It's Danny J","dannyj", "hello", "image", 20210720, 1);

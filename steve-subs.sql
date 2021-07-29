@@ -26,6 +26,7 @@ VALUES(
 		1
 	);
 -- user patricia has 1 post
+INSERT INTO Users 
 VALUES (
 		101,
 		'Patricia',

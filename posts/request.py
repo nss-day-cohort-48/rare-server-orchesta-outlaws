@@ -1,6 +1,6 @@
 import sqlite3
 from database import DB_FILE
-from models import Post, Category
+from models import Post, Category, User
 
 
 def get_posts_by_user(id):
@@ -46,10 +46,12 @@ def get_subbed_posts_for_user(id):
         db_cursor.execute("""
             SELECT s.author_id,
                 p.*,
+                u.id user_id, u.first_name, u.last_name,
                 c.label category_label
             FROM Subscriptions s
                 JOIN Posts p ON p.user_id = s.author_id
                 JOIN Categories c ON p.category_id = c.id
+                LEFT JOIN Users u ON p.user_id = u.id
             WHERE s.follower_id = ?;
         """, (id,))
 
@@ -61,6 +63,11 @@ def get_subbed_posts_for_user(id):
                         row['content'], row['approved'])
             category = Category(row['id'], row['category_label'])
             post.category = category.__dict__
+            post.user = { 
+                "id": row['user_id'],
+                "first_name": row['first_name'],
+                "last_name": row['last_name'],
+            }
             posts.append(post.__dict__)
 
         return posts

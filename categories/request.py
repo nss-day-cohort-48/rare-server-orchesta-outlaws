@@ -55,3 +55,16 @@ def update_category(id, new_cat):
         return False
     else:
         return True
+
+def delete_category(catId):
+    """allows user to delete category
+    
+    Args:
+        category id
+    """
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        DELETE from Categories
+        WHERE id = ?
+        """, (catId, ))

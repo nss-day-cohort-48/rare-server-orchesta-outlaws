@@ -1,3 +1,4 @@
+from categories.request import delete_category
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from post_reactions.request import create_post_reaction
@@ -181,6 +182,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "comments":
             delete_comment(id)
+        elif resource == "categories":
+            delete_category(id)
     
         self.wfile.write("".encode())
 

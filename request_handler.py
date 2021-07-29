@@ -1,3 +1,4 @@
+from categories.request import delete_category
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from posts.request import get_subbed_posts_for_user
@@ -193,6 +194,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "comments":
             delete_comment(id)
+        elif resource == "categories":
+            delete_category(id)
         elif resource == "posttags":
             remove_tag(id)
     

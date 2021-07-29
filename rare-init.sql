@@ -104,7 +104,7 @@ INSERT INTO Users VALUES (
     'steve',
     'brownlee',
     'https://github.com/stevebrownlee.png',
-    2021/07/26,
+    "20210726",
     1
   );
 

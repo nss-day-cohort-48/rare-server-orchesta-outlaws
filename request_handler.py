@@ -18,7 +18,8 @@ from comments import (
     delete_comment,
     edit_comment
 )
-
+from tags import get_all_tags, create_tag
+from post_tags import search_post_by_tag, get_all_posttags
 
 class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):  # pylint: disable=missing-docstring
@@ -84,6 +85,10 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_all_post_reactions()
             elif resource == "comments":
                 response = get_all_comments()
+            elif resource == "tags":
+                response = get_all_tags()
+            elif resource == "posttags":
+                response = get_all_posttags()
             elif resource == "users":
                 if id is not None:
                     response = get_single_user(id)
@@ -101,7 +106,9 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_subbed_posts_for_user(value)
             elif resource.lower() == "comments" and key.lower() == "post_id":
                 response = view_comments_by_post(value)
-
+            elif resource.lower() == "posts" and key.lower() == "tag":
+                response = search_post_by_tag(value)
+            
         self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):  # pylint: disable=missing-docstring
@@ -139,6 +146,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             self._set_headers(201)  # STATUS CREATED
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
+        elif resource == "tags":
+            self._set_headers(201)  # STATUS CREATED
+            new_tag = create_tag(post_body)
+            self.wfile.write(json.dumps(new_tag).encode())
         elif resource == "reactions":
             self._set_headers(201)
             new_reaction = create_reaction(post_body)

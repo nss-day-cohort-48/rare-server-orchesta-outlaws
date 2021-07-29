@@ -43,9 +43,4 @@ def create_tag(new_tag):
 
     return new_tag
 
-def add_tag_to_post(tag_post):
-    '''Author is able to associate one or more Tags with one of their posts'''
-
-def remove_tag(tag_id):
-    '''Author is able to unassociate one or more Tags from their posts'''
 

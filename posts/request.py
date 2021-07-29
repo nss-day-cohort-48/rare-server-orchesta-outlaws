@@ -2,6 +2,8 @@ import sqlite3
 from database import DB_FILE
 from models import Post, Category
 
+
+
 def get_posts_by_user(id):
     """Returns a list of all the posts by the user's id
     """
@@ -35,4 +37,3 @@ def get_posts_by_user(id):
             posts.append(post.__dict__)
 
     return posts
-

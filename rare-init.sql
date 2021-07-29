@@ -115,3 +115,7 @@ INSERT INTO Posts VALUES(null, 2, 1, "Billionaires in Space", 20210726, "Image",
 INSERT INTO Users VALUES(null, "Dan", "Jones", "dan@jones.com", "It's Danny J","dannyj", "hello", "image", 20210720, 1);
 
 INSERT INTO Tags VALUES(null, "Python");
+
+INSERT INTO Posts VALUES(null, 5, 1, "Billionaires in Space", "20210726", "Image", "Blah Blah Blah Bezos", 1);
+
+SELECT * FROM PostTags;

@@ -87,3 +87,30 @@ def get_all_posttags():
             posttags.append(posttag.__dict__)
 
     return posttags
+
+def add_tag_to_post(tag_post):
+    '''Author is able to associate one or more Tags with one of their posts'''
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO PostTags
+            ( post_id, tag_id )
+        VALUES
+            ( ?, ?);
+        """, (tag_post['post_id'], tag_post['tag_id'], )) 
+
+        id = db_cursor.lastrowid
+        tag_post['id'] = id
+
+    return tag_post
+
+def remove_tag(tag_id):
+    '''Author is able to unassociate one or more Tags from their posts'''
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM PostTags
+        WHERE id = ?
+        """, (tag_id, ))

@@ -1,20 +1,20 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from post_reactions.request import create_post_reaction
-from reactions.request import create_reaction
-from users.request import login_user
-from users import register_new_user, get_user_by_email, get_single_user, create_new_user
-from post_reactions import get_all_post_reactions, get_post_reactions_by_post_id
-from categories import create_category, get_all_categories, update_category
-from posts import get_all_posts, get_single_post, get_posts_by_user, create_post, update_post, delete_post
+from reactions import create_reaction
+from users import register_new_user, get_user_by_email, get_single_user, login_user
+from post_reactions import (
+    get_all_post_reactions,
+    get_post_reactions_by_post_id,
+    create_post_reaction
+)
+from categories import create_category, delete_category, get_all_categories, update_category
+from posts import get_all_posts, get_single_post, get_posts_by_user, create_post, update_post, delete_post, get_subbed_posts_for_user
 from comments import create_comment, get_all_comments, view_comments_by_post, edit_comment,delete_comment
 from tags import get_all_tags, create_tag
-from post_tags import search_post_by_tag, get_all_posttags
-
-
+from post_tags import search_post_by_tag, get_all_posttags, add_tag_to_post, remove_tag
 
 class HandleRequests(BaseHTTPRequestHandler):
-    def parse_url(self, path): # pylint: disable=missing-docstring
+    def parse_url(self, path):  # pylint: disable=missing-docstring
         path_params = path.split("/")
         resource = path_params[1]
 
@@ -90,7 +90,6 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     response = get_all_posts()
 
-
         else:
             # we got query params!
             (resource, key, value) = parsed
@@ -100,9 +99,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_post_reactions_by_post_id(value)
             elif resource.lower() == "posts" and key.lower() == "user_id":
                 response = get_posts_by_user(value)
+            elif resource.lower() == "subs" and key.lower() == "follower_id":
+                response = get_subbed_posts_for_user(value)
             elif resource.lower() == "comments" and key.lower() == "post_id":
                 response = view_comments_by_post(value)
-            elif resource.lower() == "posts" and key.lower() == "tag":
+            elif resource.lower() == "posts" and key.lower() == "label":
                 response = search_post_by_tag(value)
             
         self.wfile.write(json.dumps(response).encode())
@@ -158,6 +159,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             self._set_headers(201)
             new_post = create_post(post_body)
             self.wfile.write(json.dumps(new_post).encode())
+        elif resource == "posttags":
+            self._set_headers(201)
+            new_post_tag = add_tag_to_post(post_body)
+            self.wfile.write(json.dumps(new_post_tag).encode())
 
 
     def do_PUT(self):
@@ -184,7 +189,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         self.wfile.write("".encode())
 
-    def do_DELETE(self): # pylint: disable=missing-docstring
+    def do_DELETE(self):  # pylint: disable=missing-docstring
         """Handles DELETE requests to the server
         """
         self._set_headers(204)
@@ -194,11 +199,15 @@ class HandleRequests(BaseHTTPRequestHandler):
             delete_comment(id)
         elif resource == "posts":
             delete_post(id)
+        elif resource == "categories":
+            delete_category(id)
+        elif resource == "posttags":
+            remove_tag(id)
     
         self.wfile.write("".encode())
 
 
-def main(): # pylint: disable=missing-docstring
+def main():  # pylint: disable=missing-docstring
     host = ''
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()

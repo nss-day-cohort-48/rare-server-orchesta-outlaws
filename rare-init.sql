@@ -84,6 +84,7 @@ CREATE TABLE "Categories" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "label" varchar
 );
+
 -- INIT DATA FOR TESTING
 -- CATEGORIES
 INSERT INTO Categories ("id", "label") VALUES (1, "News");

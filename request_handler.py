@@ -11,7 +11,7 @@ from categories import create_category, delete_category, get_all_categories, upd
 from posts import get_all_posts, get_single_post, get_posts_by_user, create_post, update_post, delete_post, get_subbed_posts_for_user
 from comments import create_comment, get_all_comments, view_comments_by_post, edit_comment,delete_comment
 from tags import get_all_tags, create_tag
-from post_tags import search_post_by_tag, get_all_posttags, add_tag_to_post, remove_tag
+from post_tags import search_post_by_tag, get_all_posttags, add_tag_to_post, remove_tag, get_post_tags_by_post
 
 class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):  # pylint: disable=missing-docstring
@@ -105,7 +105,9 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = view_comments_by_post(value)
             elif resource.lower() == "posts" and key.lower() == "label":
                 response = search_post_by_tag(value)
-            
+            elif resource.lower() == "posttags" and key.lower() == "post_id":
+                response = get_post_tags_by_post(value)
+
         self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):  # pylint: disable=missing-docstring

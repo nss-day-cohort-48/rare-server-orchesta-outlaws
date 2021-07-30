@@ -88,6 +88,39 @@ def get_all_posttags():
 
     return posttags
 
+def get_post_tags_by_post(id):
+    """get all of the post tags associated with the provided id of a post
+    """
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            pt.id,
+            pt.tag_id,
+            pt.post_id,
+            t.label
+        FROM PostTags pt
+        JOIN Tags t
+            ON pt.tag_id = t.id
+        WHERE pt.post_id = ?
+        """, ( id, ))
+
+        posttags = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            posttag = PostTag(row['id'], row['tag_id'], row['post_id'])
+
+            tag = Tag(row['tag_id'], row['label'])
+            posttag.label = tag.__dict__
+
+            posttags.append(posttag.__dict__)
+
+    return posttags
+
+
 def add_tag_to_post(tag_post):
     '''Author is able to associate one or more Tags with one of their posts'''
     with sqlite3.connect("./rare.db") as conn:

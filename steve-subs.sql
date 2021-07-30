@@ -11,7 +11,7 @@ VALUES (
 		'johnny',
 		'john',
 		'https://picsum.photos/200',
-		"20210729",
+		"2021-07-29",
 		1
 	);
 INSERT INTO Posts
@@ -20,7 +20,7 @@ VALUES(
 		100,
 		1,
 		"Call me John: the Johnny John Story",
-		"20210729",
+		"2021-07-29",
 		"https://picsum.photos/400",
 		"It all started with a bang... the big bang.",
 		1
@@ -36,7 +36,7 @@ VALUES (
 		'patricia',
 		'pattinson',
 		'https://picsum.photos/200',
-		"20210729",
+		"2021-07-29",
 		1
 	);
 INSERT INTO Posts
@@ -45,7 +45,7 @@ VALUES(
 		101,
 		1,
 		"My thoughts...",
-		20210729,
+		"2021-07-29",
 		"https://picsum.photos/400",
 		"The industrial revolution and its consequences have been a disaster for the human race.",
 		1
@@ -60,7 +60,7 @@ VALUES (
 		'marty',
 		'mcbye',
 		'https://picsum.photos/200',
-		"20210729",
+		"2021-07-29",
 		1
 	);
 INSERT INTO Posts
@@ -69,12 +69,12 @@ VALUES(
 		102,
 		1,
 		"Bah Humbug",
-		"20210729",
+		"2021-07-29",
 		"https://picsum.photos/400",
 		"I hate the new Facebook layout!!!!",
 		1
 	);
 -- make steve follow johhny
-INSERT INTO Subscriptions VALUES(null, 1, 101, "20210729");
+INSERT INTO Subscriptions VALUES(null, 1, 101, "2021-07-29");
 -- make steve follow patricia
-INSERT INTO Subscriptions VALUES(null, 1, 100, "20210729");
+INSERT INTO Subscriptions VALUES(null, 1, 100, "2021-07-29");
